@@ -1,13 +1,16 @@
 import express from "express";
 import { google } from "googleapis";
+import dotenv from "dotenv";
+
+dotenv.config(); // Load environment variables from .env
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-// ⚡ Yaha apne Google Cloud credentials daalo
-const CLIENT_ID = "461360521840-nc4rac2qoea5udk1l96ndclli112s9hf.apps.googleusercontent.com"; 
-const CLIENT_SECRET = "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";
-const REDIRECT_URI = "https://your-backend-service.onrender.com/oauth2callback"; 
+// ⚡ Credentials from environment variables
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+const REDIRECT_URI = process.env.REDIRECT_URI;
 
 // OAuth2 client
 const oauth2Client = new google.auth.OAuth2(
@@ -25,7 +28,7 @@ app.get("/login", (req, res) => {
   res.redirect(url);
 });
 
-// Step 2 - Callback (Google calls this after login)
+// Step 2 - Callback
 app.get("/oauth2callback", async (req, res) => {
   const code = req.query.code;
   try {
